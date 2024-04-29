@@ -19,4 +19,10 @@ public class ServicesResponse {
     private Boolean isBooked = false;
 
     private List<BookingResponse> bookings;
+
+    public ServicesResponse(Long id, String serviceType, Integer price) {
+        this.id = id;
+        this.serviceType = serviceType;
+        this.price = price;
+    }
 }
