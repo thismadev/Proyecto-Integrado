@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import { addService } from '../utils/ApiFunctions'
+import ServiceTypeSelector from '../common/ServiceTypeSelector'
 
 const AddService = () => {
     const[newService, setNewService] = useState({
@@ -38,27 +39,49 @@ const AddService = () => {
     } catch (error) {
         setErrorMessage(error.message)
     }
+    setTimeout(() => {
+        setSuccessMessage("")
+        setErrorMessage("")
+    }, 3000)
   }
 
   return (
     <>
-    <section className='container, mt-5 mb-5'>
+    <section className='container mt-5 mb-5'>
         <div className='row justify-content-center'>
             <div className='col-md-8 col-lg-6'>
-                <h2 className='mt-5 mb-5'>Add a service</h2>
+                <h2 className='mt-5 mb-2'>Add a service</h2>
+                {successMessage && (
+							<div className="alert alert-success fade show"> {successMessage}</div>
+						)}
+
+						{errorMessage && <div className="alert alert-danger fade show"> {errorMessage}</div>}
+
                 <form onSubmit={handleSubmit}>
                     <div className='mb-3'>
                         <label htmlFor='serviceType' className='form-label'>
                             Service Type
                         </label>
-                        <input type="text" className='form-control' required id='serviceType' name='serviceType' value={newService.serviceType} onChange={handleServiceInputChange}/>
+                        <div>
+                            <ServiceTypeSelector 
+                              handleServiceInputChange={handleServiceInputChange} 
+                              newService={newService}
+                            />
+                        </div>
                     </div>
 
                     <div className='mb-3'>
                         <label htmlFor='price' className='form-label'>
                             Price
                         </label>
-                        <input type="number" className='form-control' required id='price' name='price' value={newService.price} onChange={handleServiceInputChange}/>
+                        <input required 
+                          type="number" 
+                          className='form-control' 
+                          id='price' 
+                          name='price' 
+                          value={newService.price} 
+                          onChange={handleServiceInputChange}
+                        />
                     </div>
 
                     <div className='d-grid d-md-flex mt-2'>

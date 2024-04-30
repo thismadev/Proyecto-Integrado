@@ -22,4 +22,7 @@ public class BookingResponse {
     private String bookingConfirmationCode;
 
     private ServicesResponse service;
+
+    public BookingResponse(Long bookingId, LocalDate bookingDate, String bookingConfirmationCode) {
+    }
 }

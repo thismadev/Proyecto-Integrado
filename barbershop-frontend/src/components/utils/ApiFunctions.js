@@ -27,3 +27,13 @@ export async function getServiceType() {
         throw new Error("Error fetching service type")
     }
 }
+
+// This function get all services from the database
+export async function getAllServices() {
+    try {
+        const result = await api.get("/services/all-services")
+        return result.data
+    } catch (error) {
+        throw new Error["Error fetching services"]
+    }
+}

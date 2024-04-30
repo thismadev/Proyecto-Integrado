@@ -6,6 +6,8 @@ import com.bookingapp.barbershop.domain.repository.ServicesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -20,5 +22,15 @@ public class ServicesServiceImpl implements ServicesService {
         service.setPrice(price);
 
         return servicesRepository.save(service);
+    }
+
+    @Override
+    public List<String> getAllServiceType() {
+        return servicesRepository.findDistinctServiceType();
+    }
+
+    @Override
+    public List<Services> getAllServices() {
+        return servicesRepository.findAll();
     }
 }
