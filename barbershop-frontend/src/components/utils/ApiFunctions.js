@@ -37,3 +37,32 @@ export async function getAllServices() {
         throw new Error["Error fetching services"]
     }
 }
+
+export async function deleteService(serviceId) {
+    try {
+        const result = await api.delete(`/services/delete/service/${serviceId}`)
+        return result.data
+    } catch (error) {
+        throw new Error[`Error deleting service ${error.message}}`]
+    }
+}
+
+// This function updates the service
+export async function updateService(serviceId, serviceData) {
+    const formData = new FormData()
+    formData.append("serviceType", serviceData.serviceType)
+    formData.append("price", serviceData.price)
+
+    const response = await api.put(`/services/update/${serviceId}`)
+    return response
+}
+
+// This function get a service by the id
+export async function getServiceById(serviceId) {
+    try {
+        const result = await api.get(`/services/service/${serviceId}`)
+        return result.data
+    } catch (error) {
+        throw new Error[`Error getting service ${error.message}`]
+    }
+}

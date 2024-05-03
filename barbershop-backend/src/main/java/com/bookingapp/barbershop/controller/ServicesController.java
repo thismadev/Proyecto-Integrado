@@ -47,13 +47,19 @@ public class ServicesController {
         return ResponseEntity.ok(servicesResponses);
     }
 
+    @DeleteMapping("/delete/service/{serviceId}")
+    public ResponseEntity<Void> deleteService(@PathVariable("serviceId") Long serviceId) {
+        service.delete(serviceId);
+        return ResponseEntity<>(HttpStatus.NO_CONTENT)
+    }
+
     private ServicesResponse getServiceResponse(Services service) {
         List<BookedService> bookings = getAllBookingsByServiceId(service.getId());
-        List<BookingResponse> bookingInfo = bookings
-                .stream()
-                .map(booking -> new BookingResponse(booking.getBookingId(),
-                        booking.getBookingDate(),
-                        booking.getBookingConfirmationCode())).toList();
+        // List<BookingResponse> bookingInfo = bookings
+        //         .stream()
+        //         .map(booking -> new BookingResponse(booking.getBookingId(),
+        //                 booking.getBookingDate(),
+        //                 booking.getBookingConfirmationCode())).toList();
         return new ServicesResponse(service.getId(),
                 service.getServiceType(),
                 service.getPrice(),

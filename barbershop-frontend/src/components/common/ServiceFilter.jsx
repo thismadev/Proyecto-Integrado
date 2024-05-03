@@ -23,7 +23,10 @@ export const ServiceFilter = (data, setFilteredData) => {
         <span className='input-group-text' id='service-type-filter'> 
           Filter services by type
         </span>
-        <select className='form-select' value={filter} onChange={handleSelectChange} name="" id="">
+        <select className='form-select' 
+        aria-label="romm type filter"
+        value={filter} 
+        onChange={handleSelectChange} name="" id="">
             <option value={""}>Select a service type to filter...</option>
             {serviceTypes.map((type, index) => (
             <option key={index} value={String(type)}>

@@ -8,4 +8,5 @@ public interface ServicesService {
     Services addNewService(String serviceType, Integer price);
     List<String> getAllServiceType();
     List<Services> getAllServices();
+    void deleteService(Long serviceId);
 }

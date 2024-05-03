@@ -33,4 +33,12 @@ public class ServicesServiceImpl implements ServicesService {
     public List<Services> getAllServices() {
         return servicesRepository.findAll();
     }
+
+    @Override
+    public void deleteService(Long serviceId) {
+        Optional<Service> service = servicesRepository.findById(serviceId);
+        if(service.isPresent()) {
+            servicesRepository.deleteById(serviceId);
+        }
+    }
 }
