@@ -4,9 +4,9 @@ import com.bookingapp.barbershop.application.impl.BookedServiceServiceImpl;
 import com.bookingapp.barbershop.application.service.ServicesService;
 import com.bookingapp.barbershop.domain.entity.BookedService;
 import com.bookingapp.barbershop.domain.entity.Services;
-import com.bookingapp.barbershop.response.BookingResponse;
 import com.bookingapp.barbershop.response.ServicesResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
