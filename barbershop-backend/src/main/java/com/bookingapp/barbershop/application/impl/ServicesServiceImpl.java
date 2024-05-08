@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -35,10 +36,25 @@ public class ServicesServiceImpl implements ServicesService {
     }
 
     @Override
-    public void deleteService(Long serviceId) {
-        Optional<Service> service = servicesRepository.findById(serviceId);
-        if(service.isPresent()) {
+    public void deleteService(Integer serviceId) {
+        Optional<Services> theService = servicesRepository.findById(serviceId);
+        if(theService.isPresent()){
             servicesRepository.deleteById(serviceId);
         }
     }
+
+    @Override
+    public Services updateService(Integer serviceId, String serviceType, Integer price) {
+        Services services = servicesRepository.findById(serviceId).get();
+        if (serviceType != null) services.setServiceType(serviceType);
+        if (price != null) services.setPrice(price);
+
+        return servicesRepository.save(services);
+    }
+
+    @Override
+    public Optional<Services> getServiceById(Integer serviceId) {
+        return Optional.of(servicesRepository.findById(serviceId).get());
+    }
+
 }

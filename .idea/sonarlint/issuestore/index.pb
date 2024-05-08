@@ -17,3 +17,9 @@ dbarbershop-backend/src/main/java/com/bookingapp/barbershop/domain/repository/Se
 hbarbershop-backend/src/main/java/com/bookingapp/barbershop/application/service/BookedServiceService.java,3\6\360562e306f0fb16a0c63c20d3560b7c62983044
 ™
 ibarbershop-backend/src/main/java/com/bookingapp/barbershop/application/impl/BookedServiceServiceImpl.java,e\7\e70b0fb236764372842277f024650d90ffa7466b
+“
+cbarbershop-backend/src/main/java/com/bookingapp/barbershop/exception/ResourceNotFoundException.java,b\0\b09bd954ce4e1ccda10c97aa3bd63a7d570c0e89
+“
+cbarbershop-backend/src/main/java/com/bookingapp/barbershop/application/service/ServicesService.java,b\3\b37454fc43d5ff92b540e814597578033a3c7bd1
+”
+dbarbershop-backend/src/main/java/com/bookingapp/barbershop/application/impl/ServicesServiceImpl.java,7\f\7fe8cb35c1290b7e6c8c6348d2e8f86aab739505

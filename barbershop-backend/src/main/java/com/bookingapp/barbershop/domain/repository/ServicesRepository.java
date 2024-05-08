@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface ServicesRepository extends JpaRepository<Services, Long> {
+public interface ServicesRepository extends JpaRepository<Services, Integer> {
     @Query("SELECT DISTINCT s.serviceType FROM Services s")
     List<String> findDistinctServiceType();
 }
