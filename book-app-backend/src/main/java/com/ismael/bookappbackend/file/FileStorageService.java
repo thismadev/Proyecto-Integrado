@@ -24,6 +24,10 @@ public class FileStorageService {
     @Value("${application.file.uploads.photos-output-path}")
     private String fileUploadPath;
 
+    public FileStorageService(String fileUploadPath) {
+        this.fileUploadPath = fileUploadPath;
+    }
+
     public String saveFile(
             @Nonnull MultipartFile sourceFile,
             @Nonnull Integer bookId,

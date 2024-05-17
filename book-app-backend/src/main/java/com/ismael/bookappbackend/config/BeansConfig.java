@@ -1,6 +1,8 @@
 package com.ismael.bookappbackend.config;
 
+import com.ismael.bookappbackend.file.FileStorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -18,6 +20,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class BeansConfig {
 
     private final UserDetailsService userDetailsService;
+
+    @Value("${application.file.uploads.photos-output-path}")
+    private String fileUploadPath;
+
+    @Bean
+    public FileStorageService fileStorageService() {
+        return new FileStorageService(fileUploadPath);
+    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
