@@ -1,5 +1,7 @@
 package com.ismael.bookappbackend.user;
 
+import com.ismael.bookappbackend.book.Book;
+import com.ismael.bookappbackend.history.BookTransactionHistory;
 import com.ismael.bookappbackend.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -63,6 +65,12 @@ public class User implements UserDetails, Principal {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
+
+    @OneToMany(mappedBy = "user")
+    private List<BookTransactionHistory> histories;
+
     /*
      * Fecha y hora de creación del registro. Esta propiedad es gestionada automáticamente por Spring Data JPA.
      *
@@ -86,11 +94,6 @@ public class User implements UserDetails, Principal {
     @LastModifiedDate
     @Column(insertable = false)
     private LocalDateTime lastModifiedDate;
-
-    @Override
-    public String getName() {
-        return email;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -128,6 +131,11 @@ public class User implements UserDetails, Principal {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public String getName() {
+        return email;
     }
 
     public String fullName() {
