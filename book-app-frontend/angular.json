@@ -15,11 +15,11 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/book-app-frontend",
             "index": "src/index.html",
-            "browser": "src/main.ts",
+            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -51,9 +51,12 @@
               "outputHashing": "all"
             },
             "development": {
+              "buildOptimizer": false,
               "optimization": false,
+              "vendorChunk": true,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
@@ -62,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "book-app-frontend:build:production"
+              "browserTarget": "book-app-frontend:build:production"
             },
             "development": {
-              "buildTarget": "book-app-frontend:build:development"
+              "browserTarget": "book-app-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -73,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "book-app-frontend:build"
+            "browserTarget": "book-app-frontend:build"
           }
         },
         "test": {
@@ -99,6 +102,6 @@
     }
   },
   "cli": {
-    "analytics": "b61048ad-2574-42dc-857d-d165b02add30"
+    "analytics": "e86d2e40-4dcc-41e2-8b5f-2d1adc380db6"
   }
 }
