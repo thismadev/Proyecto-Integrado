@@ -138,7 +138,7 @@ public class User implements UserDetails, Principal {
         return email;
     }
 
-    public String fullName() {
+    public String getFullName() {
         return firstname + " " + lastname;
     }
 }

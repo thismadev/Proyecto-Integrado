@@ -1,6 +1,5 @@
 package com.ismael.bookappbackend.email;
 
-
 import lombok.Getter;
 
 @Getter
@@ -13,6 +12,4 @@ public enum EmailTemplateName {
     EmailTemplateName(String name) {
         this.name = name;
     }
-
-
 }
