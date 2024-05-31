@@ -61,14 +61,12 @@ Asegúrate de que el archivo `application.yml` de tu aplicación Spring Boot est
 ### Compilación y Ejecución
 Si utilizas Maven, compila y ejecuta tu aplicación con los siguientes comandos:
 
-```bash
-mvn clean install
-mvn spring-boot:run
+`mvn clean install`
+`mvn spring-boot:run`
 
 ### Paso 5: Ejecución del Cliente con Angular
-```bash
-npm run start
-ng serve
+`npm run start`
+`ng serve`
 
 - Por ultimo ve al puerto http://localhost:4200/register si no estas registrado todavía
 Y abre una ventana con el puerto http://localhost:1080/ para recibir tu email de verificación y activación de la cuenta una vez metas los datos de registro
