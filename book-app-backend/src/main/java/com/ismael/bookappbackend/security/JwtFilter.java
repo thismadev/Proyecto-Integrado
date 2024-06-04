@@ -1,5 +1,6 @@
 package com.ismael.bookappbackend.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,33 +31,35 @@ public class JwtFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        if (request.getServletPath().contains("/api/v1/auth")) {
-            filterChain.doFilter(request, response);
-            return;
+        String authHeader = request.getHeader("Authorization");
+        String jwt = null, refreshToken = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            jwt = authHeader.substring(7);
+        } else if (authHeader != null && authHeader.startsWith("BearerR ")) {  // Supongamos un prefijo "BearerR" para refresh tokens
+            refreshToken = authHeader.substring(8);
         }
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String userEmail;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(jwt);
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        try {
+            if (jwt != null && jwtService.validateRefreshToken(jwt)) {
+                authenticate(jwt, request);
             }
+            filterChain.doFilter(request, response);
+        } catch (ExpiredJwtException ex) {
+            if (refreshToken != null && jwtService.validateRefreshToken(refreshToken)) {
+                String newAccessToken = jwtService.renewAccessToken(refreshToken);
+                response.setHeader("Authorization", "Bearer " + newAccessToken);
+            }
+            filterChain.doFilter(request, response);
         }
-        filterChain.doFilter(request, response);
+    }
+
+    private void authenticate(String jwt, HttpServletRequest request) {
+        String userEmail = jwtService.extractUsername(jwt);
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
+        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 }

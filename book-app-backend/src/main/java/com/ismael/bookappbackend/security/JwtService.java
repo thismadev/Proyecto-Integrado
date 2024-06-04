@@ -1,12 +1,15 @@
 package com.ismael.bookappbackend.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -17,11 +20,17 @@ import java.util.function.Function;
 
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
+
+    private final UserDetailsService userDetailsService;
+
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
     @Value("${application.security.jwt.expiration}")
     private long jwtExpiration;
+    @Value("${application.security.jwt.refresh-expiration}")
+    private long refreshExpiration;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -49,18 +58,23 @@ public class JwtService {
             long expiration
     ) {
         var authorities = userDetails.getAuthorities()
-                .stream().
-                map(GrantedAuthority::getAuthority)
+                .stream()
+                .map(GrantedAuthority::getAuthority)
                 .toList();
-        return Jwts
+
+        JwtBuilder builder = Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .claim("authorities", authorities)
-                .signWith(getSignInKey())
-                .compact();
+                .signWith(getSignInKey());
+
+        if (expiration > 0) {
+            builder.setExpiration(new Date(System.currentTimeMillis() + expiration));
+        }
+
+        return builder.compact();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -80,6 +94,7 @@ public class JwtService {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
+                .setAllowedClockSkewSeconds(300)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -88,5 +103,24 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshExpiration))
+                .signWith(getSignInKey())
+                .compact();
+    }
+
+    public boolean validateRefreshToken(String token) {
+        return !isTokenExpired(token);  // Reutiliza el método isTokenExpired para validar el refresh token
+    }
+
+    public String renewAccessToken(String refreshToken) {
+        final Claims claims = extractAllClaims(refreshToken);
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(claims.getSubject());
+        return generateToken(userDetails);
     }
 }
